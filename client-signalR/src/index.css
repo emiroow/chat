@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: #ffffff;
+  color: #171717; /* neutral-900 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: #0a0a0a; /* neutral-950 */
+  color: #f3f4f6; /* neutral-100 */
+}
+/* Theme tokens: designed to match the shared screenshots (light/dark) */
+:root {
+  /* Light */
+  --bg: #ffffff;
+  --sidebar: #ffffff;
+  --panel: #ffffff;
+  --text: #111827; /* neutral-900 */
+  --muted: #f3f4f6; /* neutral-100 */
+  --border: #e5e7eb; /* neutral-200 */
+  --primary: #111827; /* black bubble in light */
+  --bubble-me: #111827; /* my messages */
+  --bubble-me-text: #ffffff;
+  --bubble-them: #f3f4f6; /* others' messages */
+  --bubble-them-text: #111827;
+  --badge: #111827; /* blue-600 */
+  --scrollbar-thumb: #d1d5db; /* neutral-300 */
+
+  /* Chat wallpaper (day) */
+  --chat-dot: rgba(0, 81, 255, 0.096); /* subtle neutral-900 */
+  --chat-gradient: radial-gradient(
+      1200px 800px at 80% -10%,
+      rgba(0, 0, 0, 0.06),
+      rgba(0, 0, 0, 0.01) 60%
+    ),
+    radial-gradient(
+      900px 600px at 0% -20%,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0) 60%
+    );
+}
+
+.dark:root {
+  /* Dark (violet theme) */
+  --bg: #0f0b1f; /* deep violet */
+  --sidebar: #0f0b1f;
+  --panel: #120f25;
+  --text: #e6e1f9; /* soft violet white */
+  --muted: #1a1533; /* hover surfaces */
+  --border: #2a2345; /* separators */
+  --primary: #b794ff; /* accent for buttons */
+  --bubble-me: #b794ff; /* my messages */
+  --bubble-me-text: #1a1033; /* readable on light purple */
+  --bubble-them: #1a1533; /* others' messages */
+  --bubble-them-text: #e6e1f9;
+  --badge: #8b5cf6; /* violet-500 */
+  --scrollbar-thumb: #3b2e5a;
+
+  /* Chat wallpaper (night) */
+  --chat-dot: rgba(169, 126, 255, 0.089); /* soft violet dot */
+  --chat-gradient: radial-gradient(
+      1200px 800px at 80% -10%,
+      rgb(0, 0, 0),
+      rgba(0, 0, 0, 0.1)
+    ),
+    radial-gradient(
+      900px 600px at 0% -20%,
+      rgba(0, 0, 0, 0.219),
+      rgb(0, 0, 0) 60%
+    );
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide global (page) scrollbars; keep chat scrollbars via ScrollArea (variant=visible) */
+body {
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* Telegram-like chat wallpaper (day/night via CSS vars) */
+.chat-wallpaper {
+  position: relative;
+  background-color: var(--bg);
+  /* Dotted pattern + soft radial color gradients */
+  background-image: radial-gradient(var(--chat-dot) 1px, transparent 1px),
+    var(--chat-gradient);
+  background-size: 12px 12px, cover;
+  background-position: 0 0, center;
+}
+
+/* Persian fonts (IRANSansX FaNum) */
+@font-face {
+  font-family: "IRANSansX FaNum";
+  src: url("/src/assets/fonts/IRANSansXFaNum-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANSansX FaNum";
+  src: url("/src/assets/fonts/IRANSansXFaNum-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANSansX FaNum";
+  src: url("/src/assets/fonts/IRANSansXFaNum-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANSansX FaNum";
+  src: url("/src/assets/fonts/IRANSansXFaNum-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-sans: "IRANSansX FaNum", ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+}
