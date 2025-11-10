@@ -1,18 +1,31 @@
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { hubApi } from "../../lib/signalR";
 import { IconPlus, IconSend } from "../icons";
 import { Button } from "../ui/button";
 
-export const MessageInput: React.FC = () => {
+export const MessageInput = () => {
   const [value, setValue] = useState("");
+  const [sending, setSending] = useState(false);
+  const { chatId } = useParams<{ chatId: string }>();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const userId = localStorage.getItem("userId") || "";
 
-  const send = () => {
+  const send = async () => {
     const text = value.trim();
-    if (!text) return;
-    // Here you can add your send logic
-    console.log("Send message:", text);
-    setValue("");
+    if (!text || !chatId || !userId || sending) return;
+    try {
+      setSending(true);
+      await hubApi.SendMessage(userId, chatId, text).then((res) => {
+        console.log(res);
+      });
+      setValue("");
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -67,10 +80,11 @@ export const MessageInput: React.FC = () => {
         >
           <Button
             onClick={send}
+            disabled={!value.trim() || sending || !chatId}
             variant="default"
             size="md"
             aria-label="Send"
-            className="h-12 rounded-lg px-4 shadow-[0_6px_20px_rgba(139,92,246,0.35)]"
+            className="h-12 rounded-lg px-4 shadow-[0_6px_20px_rgba(139,92,246,0.35)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <IconSend className="size-5" />
           </Button>

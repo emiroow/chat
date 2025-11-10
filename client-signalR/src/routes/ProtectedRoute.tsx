@@ -7,8 +7,9 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
   const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
 
-  if (!userId) {
+  if (!userId && !userName) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

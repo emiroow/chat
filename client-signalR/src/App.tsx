@@ -1,5 +1,7 @@
 // React import is not required with automatic JSX runtime
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Toaster } from "./components/ui/toast";
+import { SignalRProvider } from "./context/signalRContext";
 import { QueryProvider } from "./providers/QueryProvider";
 import { routes } from "./routes";
 
@@ -8,9 +10,12 @@ const router = createBrowserRouter(routes);
 
 function App() {
   return (
-    <QueryProvider>
-      <RouterProvider router={router} />
-    </QueryProvider>
+    <SignalRProvider>
+      <Toaster />
+      <QueryProvider>
+        <RouterProvider router={router} />
+      </QueryProvider>
+    </SignalRProvider>
   );
 }
 

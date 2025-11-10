@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSignalR } from "../../context/signalRContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { hubApi } from "../../lib/signalR";
+import type { Message, User } from "../../types";
 import { ChatHeader } from "../chat/ChatHeader";
 import { MessageInput } from "../chat/MessageInput";
 import { MessageList } from "../chat/MessageList";
@@ -14,6 +17,45 @@ export const ChatLayout: React.FC = () => {
   const navigate = useNavigate();
   const isDesktop = useIsDesktop();
   const [profileOpen, setProfileOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const { chatId } = useParams<{ chatId: string }>();
+  const { connected, onHubEvent, offHubEvent, signalRConnection } =
+    useSignalR();
+  const userId = localStorage.getItem("userId") || "";
+
+  const getMessages = async (id: string) => {
+    if (!userId && !id) return;
+    hubApi.GetMessages(userId, id).then((res) => {
+      setMessages(res.messages);
+      setUser(res.user);
+    });
+  };
+
+  useEffect(() => {
+    if (connected) getMessages(chatId || "");
+  }, [chatId, hubApi, connected]);
+
+  // Listen for real-time messages
+  useEffect(() => {
+    if (!connected) return;
+    const handleNewMessage = (message: Message) => {
+      // Only add message if it's for the current chat
+      if (
+        chatId &&
+        ((message.from === chatId && message.to === userId) ||
+          (message.from === userId && message.to === chatId))
+      ) {
+        setMessages((prev) => [...prev, message]);
+      }
+    };
+
+    onHubEvent("message", handleNewMessage);
+
+    return () => {
+      offHubEvent("message", handleNewMessage);
+    };
+  }, [signalRConnection, connected, chatId, userId, onHubEvent, offHubEvent]);
 
   // Open profile panel on desktop, close on mobile
   useEffect(() => {
@@ -27,17 +69,20 @@ export const ChatLayout: React.FC = () => {
   return (
     <div className="relative flex h-dvh w-full bg-(--bg) text-(--text)">
       <div className="hidden md:block">
-        <Sidebar onSelect={(id) => navigate(`/${id}`)} />
+        <Sidebar />
       </div>
 
       <div className={"chat-wallpaper flex min-w-0 flex-1 flex-col"}>
         <ChatHeader
-          name="Sara"
-          subtitle="Online"
+          name={user?.name || "Loading..."}
           onOpenSidebar={() => navigate("/")}
           onOpenProfile={() => setProfileOpen((v) => !v)}
         />
-        <MessageList />
+        <MessageList
+          messages={messages}
+          currentUserId={userId}
+          peerName={user?.name}
+        />
         <MessageInput />
       </div>
 
@@ -55,7 +100,10 @@ export const ChatLayout: React.FC = () => {
             className="absolute right-0 top-0 z-20 hidden h-full w-80 md:block"
           >
             <div className="relative h-full">
-              <ProfilePanel name="Sara" handle="sara" />
+              <ProfilePanel
+                name={user?.name || "Loading..."}
+                handle={user?.userName || "loading"}
+              />
               <div className="absolute right-2 top-2">
                 <Button
                   variant="secondary"
@@ -102,7 +150,10 @@ export const ChatLayout: React.FC = () => {
                 </Button>
               </div>
               <div className="h-full overflow-y-auto">
-                <ProfilePanel name="Sara" handle="sara" />
+                <ProfilePanel
+                  name={user?.name || "Loading..."}
+                  handle={user?.userName || "loading"}
+                />
               </div>
             </motion.div>
           </motion.div>

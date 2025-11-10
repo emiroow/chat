@@ -4,6 +4,16 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      "/hubs/realtime": {
+        target: "https://sample-msg.asclanding.top",
+        changeOrigin: true,
+        secure: true,
+        ws: true,
+      },
+    },
+  },
   plugins: [
     tailwindcss(),
     react({
