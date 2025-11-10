@@ -1,102 +1,106 @@
-# Chat Monorepo — React + Socket.IO / SignalR + Node.js
+npm install
+npm run dev
 
-چت مونو‌ریپو — ریاکت + Socket.IO/SignalR + نود.جی‌اس
+# Chat Monorepo
 
-This repository contains a small, modern chat application implemented in two client variants and one server:
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://react.dev/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-4.x-black?logo=socket.io)](https://socket.io/)
+[![SignalR](https://img.shields.io/badge/SignalR-9.x-blue?logo=microsoft)](https://learn.microsoft.com/aspnet/core/signalr/introduction)
+[![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](./server-socket/package.json)
 
-- `client-socket`: React + TypeScript + Vite chat client using Socket.IO
-- `client-signalR`: React + TypeScript + Vite chat client using Microsoft SignalR
-- `server-socket`: Node.js + Express + Socket.IO chat backend
+---
 
-این مخزن شامل یک اپلیکیشن چت مدرن است که در دو نسخه کلاینت و یک سرور پیاده‌سازی شده است:
+> **English · [فارسی](./README.fa.md)**
 
-- `client-socket`: کلاینت چت با React/TypeScript/Vite و Socket.IO
-- `client-signalR`: کلاینت چت با React/TypeScript/Vite و Microsoft SignalR
-- `server-socket`: بک‌اند چت با Node.js/Express و Socket.IO
+---
 
-## Features / قابلیت‌ها
+## Overview
 
-- Real‑time messaging with Socket.IO or SignalR
+A modern, real-time chat application in a monorepo structure with:
+
+- **client-socket**: React + TypeScript + Vite + Socket.IO client
+- **client-signalR**: React + TypeScript + Vite + Microsoft SignalR client
+- **server-socket**: Node.js + Express + Socket.IO backend
+
+Perfect for learning, rapid prototyping, or deploying a chat app with two different client technologies.
+
+---
+
+## Features
+
+- Real-time messaging (Socket.IO or SignalR)
 - Modern UI with React 19, Tailwind CSS, and TanStack Query
-- Responsive chat layout (sidebar, profile panel, message list)
-- In‑memory demo store on server for conversations and messages
+- Responsive layout (sidebar, profile, message list)
+- In-memory demo storage on the server
+- Easy local development and configuration
 
-- پیام‌رسانی لحظه‌ای با Socket.IO یا SignalR
-- رابط کاربری مدرن با React 19، Tailwind CSS و TanStack Query
-- چینش منعطف برای موبایل و دسکتاپ
-- ذخیره‌سازی آزمایشی در حافظه سرور برای گفتگوها و پیام‌ها
+---
 
-## Repository structure / ساختار مخزن
+## Tech Stack
 
-- `client-socket/` — Socket.IO client
-- `client-signalR/` — SignalR client
-- `server-socket/` — Socket.IO server (default port: 3000)
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, Zustand, TanStack Query, React Router
+- **Backend:** Node.js 18+, Express, Socket.IO
+- **Other:** ESLint, Prettier, .env configuration
 
-## Quick start / شروع سریع
+---
 
-1. Start the server (Socket.IO):
+## Quick Start
 
-   - Windows Bash
+### Prerequisites
 
-   ```bash
-   cd "c:/Development Projects/chat/server-socket"
-   npm install
-   npm run dev
-   ```
+- Node.js 18+
+- npm (or pnpm/yarn)
 
-   The server listens on http://localhost:3000 by default. Set `PORT` to change it.
-
-2. Start the Socket.IO client:
-
-   ```bash
-   cd "c:/Development Projects/chat/client-socket"
-   cp .env.example .env
-   # set VITE_SERVER_URL=http://localhost:3000
-   npm install
-   npm run dev
-   ```
-
-3. Start the SignalR client:
-
-   ```bash
-   cd "c:/Development Projects/chat/client-signalR"
-   cp .env.example .env
-   # set VITE_SIGNALR_URL (e.g., http://localhost:5000/hubs/chat or your hosted URL)
-   npm install
-   npm run dev
-   ```
-
-۱) سرور Socket.IO را اجرا کنید (پورت پیش‌فرض 3000):
-
-- در ویندوز (Bash):
+### 1. Start the server
 
 ```bash
-cd "c:/Development Projects/chat/server-socket"
+cd server-socket
 npm install
 npm run dev
 ```
 
-۲) کلاینت Socket.IO را اجرا کنید:
+Default: http://localhost:3000
+
+### 2. Start the Socket.IO client
 
 ```bash
-cd "c:/Development Projects/chat/client-socket"
+cd client-socket
 cp .env.example .env
-# مقدار VITE_SERVER_URL را برابر http://localhost:3000 قرار دهید
+# Set VITE_SERVER_URL to http://localhost:3000
 npm install
 npm run dev
 ```
 
-۳) کلاینت SignalR را اجرا کنید:
+### 3. Start the SignalR client
 
 ```bash
-cd "c:/Development Projects/chat/client-signalR"
+cd client-signalR
 cp .env.example .env
-# مقدار VITE_SIGNALR_URL را تنظیم کنید (مثلاً http://localhost:5000/hubs/chat)
+# Set VITE_SIGNALR_URL in .env
 npm install
 npm run dev
 ```
 
-## Configuration / تنظیمات محیطی
+---
+
+## Environment Variables
+
+- **client-socket**: `VITE_SERVER_URL` (default: http://localhost:3000)
+- **client-signalR**: `VITE_SIGNALR_URL` (required)
+- **server-socket**: `PORT` (default: 3000)
+
+---
+
+## Project Structure
+
+```
+client-socket/      # React + Socket.IO client
+client-signalR/     # React + SignalR client
+server-socket/      # Node.js + Socket.IO backend
+```
+
+---
 
 - client-socket:
 
