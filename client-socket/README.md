@@ -1,83 +1,59 @@
-# React + TypeScript + Vite
+# Chat Client (Socket.IO) — React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+کلاینت چت (Socket.IO) — ریاکت + تایپ‌اسکریپت + وایت
 
-Currently, two official plugins are available:
+This is the Socket.IO-powered React chat client. It connects to the Socket.IO backend (`server-socket`) and provides a responsive chat experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+این پروژه نسخه کلاینت چت با Socket.IO است که به سرور `server-socket` متصل می‌شود و تجربه چت واکنش‌گرا ارائه می‌دهد.
 
-## React Compiler
+## Features / قابلیت‌ها
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Real-time messaging via Socket.IO client
+- Responsive layout with `ChatLayout` at route `/chat/:id`
+- React 19 + Vite + Tailwind CSS 4
+- State/Data with Zustand + TanStack Query
 
-Note: This will impact Vite dev & build performances.
+## Configuration / تنظیمات
 
-## Expanding the ESLint configuration
+- `VITE_SERVER_URL` — Socket.IO server URL (default: `http://localhost:3000`)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Set up env:
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+cp .env.example .env
+# VITE_SERVER_URL=http://localhost:3000
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Note: `.env.example` may include other keys from earlier templates. For this client the critical variable is `VITE_SERVER_URL`.
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## Run locally / اجرای محلی
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+npm run dev
 ```
 
-## Architecture notes
+## Scripts / اسکریپت‌ها
 
-- Routing is unified: the app always renders `ChatLayout` at `/chat/:id` for both desktop and mobile. There are no separate mobile pages.
-- `ChatLayout` handles responsiveness internally:
-  - Sidebar becomes a drawer on small screens.
-  - Profile panel shows as a right-side panel on desktop and a full-screen overlay on mobile.
-- If you need to change chat behavior, do it once in `src/components/layouts/ChatLayout.tsx`.
+- `npm run dev` — start Vite dev server
+- `npm run build` — type-check and build for production
+- `npm run preview` — preview production build
+- `npm run lint` — run ESLint
+
+## Socket events / رویدادهای سوکت
+
+Client uses these events (see `src/config/socket.config.ts` and server docs):
+
+- `register` — body: `{ userName, name }`
+- `checkUser` — body: `{ userName }`
+- `getConversations` — body: `{ userName }`
+- `getMessages` — body: `{ from, to }`
+- `sendMessage` — body: `{ from, to, text }`
+
+## Tech / تکنولوژی‌ها
+
+React 19, TypeScript, Vite 7, Tailwind CSS 4, TanStack Query 5, Zustand, socket.io-client 4
+
+## SEO keywords / کلمات کلیدی
+
+socket io chat, react chat, realtime chat, typescript, vite, persian, farsi, سوکت آی او، چت آنلاین، ری‌اکت

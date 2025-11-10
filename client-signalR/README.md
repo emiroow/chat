@@ -1,83 +1,61 @@
-# React + TypeScript + Vite
+# Chat Client (SignalR) — React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+کلاینت چت (SignalR) — ریاکت + تایپ‌اسکریپت + وایت
 
-Currently, two official plugins are available:
+This is the SignalR-powered React chat client. It connects to a SignalR hub and renders a responsive chat UI built with Tailwind CSS, React Router, TanStack Query, and Zustand.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+این پروژه نسخه کلاینت چت با SignalR است. کلاینت به هاب SignalR متصل می‌شود و یک رابط کاربری واکنش‌گرا با Tailwind/React Router/TanStack Query/Zustand ارائه می‌دهد.
 
-## React Compiler
+## Features / قابلیت‌ها
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Real-time messaging via Microsoft SignalR
+- Responsive ChatLayout with sidebar, message list, and profile panel
+- React 19 + Vite + Tailwind CSS 4
+- State and data: Zustand + TanStack Query
 
-Note: This will impact Vite dev & build performances.
+- پیام‌رسانی لحظه‌ای با SignalR
+- چینش واکنش‌گرا برای چت (سایدبار، لیست پیام‌ها، پروفایل)
+- استفاده از React 19، Vite و Tailwind CSS
+- مدیریت State/Data با Zustand و TanStack Query
 
-## Expanding the ESLint configuration
+## Configuration / تنظیمات
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `VITE_SIGNALR_URL` — SignalR hub URL (required)
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+نمونه فایل `.env.example` را به `.env` کپی کرده و مقدار `VITE_SIGNALR_URL` را تنظیم کنید.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+cp .env.example .env
+# VITE_SIGNALR_URL=https://your-host/hubs/realtime
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Connection config lives in `src/config/signalR.config.ts`.
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## Run locally / اجرای محلی
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+npm run dev
 ```
 
-## Architecture notes
+Then open the printed URL from Vite (e.g., http://localhost:5173).
 
-- Routing is unified: the app always renders `ChatLayout` at `/chat/:id` for both desktop and mobile. There are no separate mobile pages.
-- `ChatLayout` handles responsiveness internally:
-  - Sidebar becomes a drawer on small screens.
-  - Profile panel shows as a right-side panel on desktop and a full-screen overlay on mobile.
-- If you need to change chat behavior, do it once in `src/components/layouts/ChatLayout.tsx`.
+## Scripts / اسکریپت‌ها
+
+- `npm run dev` — start Vite dev server
+- `npm run build` — type-check and build for production
+- `npm run preview` — preview production build
+- `npm run lint` — run ESLint
+
+## Routes / مسیرها
+
+- Unified chat route: `/chat/:id`
+- تغییر رفتار کلی چت در `src/components/layouts/ChatLayout.tsx` انجام می‌شود.
+
+## Tech / تکنولوژی‌ها
+
+React 19, TypeScript, Vite 7, Tailwind CSS 4, TanStack Query 5, Zustand, @microsoft/signalr
+
+## SEO keywords / کلمات کلیدی
+
+signalr chat, react signalr, realtime chat react, typescript, vite, persian, farsi, سیگنال آر، چت ریل‌تایم، ری‌اکت، تایپ‌اسکریپت
