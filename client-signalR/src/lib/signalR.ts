@@ -1,4 +1,5 @@
 import * as signalR from "@microsoft/signalr";
+import { toast } from "../components/ui/toast";
 import { SIGNALR_CONFIG } from "../config/signalR.config";
 import type {
   conversation,
@@ -9,44 +10,120 @@ import type {
 } from "../types";
 
 let connection: signalR.HubConnection | null = null;
+let startingPromise: Promise<signalR.HubConnection> | null = null;
 
 // establish and return SignalR connection
 export const connectSignalR = async (): Promise<signalR.HubConnection> => {
-  if (connection && connection.state === signalR.HubConnectionState.Connected)
+  // If we're already connected, return the connection
+  if (connection && connection.state === signalR.HubConnectionState.Connected) {
+    console.debug(
+      "connectSignalR: already connected, returning existing connection"
+    );
     return connection;
-
-  connection = new signalR.HubConnectionBuilder()
-    .withUrl(SIGNALR_CONFIG.url, {
-      withCredentials: false,
-    })
-    // Explicit reconnect intervals: immediate, 2s, 10s, 30s
-    .withAutomaticReconnect([0, 2000, 10000, 30000])
-    .configureLogging(signalR.LogLevel.Information)
-    .build();
-
-  connection.onreconnecting((error) =>
-    console.warn("🔁 SignalR reconnecting...", error)
-  );
-
-  connection.onreconnected((connectionId) =>
-    console.log("✅ SignalR reconnected", connectionId)
-  );
-
-  connection.onclose((error) =>
-    console.warn("❌ SignalR connection closed", error)
-  );
-
-  try {
-    await connection.start();
-    console.log("✅ SignalR connected");
-  } catch (err) {
-    console.error("❌ SignalR connection failed:", err);
-    // keep connection as null so future calls can retry
-    connection = null;
-    throw err;
   }
 
-  return connection;
+  // If a start is already in progress, reuse that promise to avoid creating
+  // multiple concurrent connections (this is the root cause of double connections
+  // when React Strict Mode or fast reloads call connect twice).
+  if (startingPromise) {
+    console.debug(
+      "connectSignalR: connection start in progress, awaiting existing promise"
+    );
+    return startingPromise;
+  }
+
+  startingPromise = (async () => {
+    // If no connection object exists (or it's explicitly disconnected), build a new one
+    if (
+      !connection ||
+      connection.state === signalR.HubConnectionState.Disconnected
+    ) {
+      console.debug("connectSignalR: building new HubConnection");
+      connection = new signalR.HubConnectionBuilder()
+        .withUrl(SIGNALR_CONFIG.url, {
+          withCredentials: false,
+        })
+        // Explicit reconnect intervals: immediate, 2s, 10s, 30s
+        .withAutomaticReconnect([0, 2000, 10000, 30000])
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+      // Manage a single persistent reconnect toast so the UI doesn't spam notifications
+      let reconnectToastId: number | null = null;
+      connection.onreconnecting((error) => {
+        console.warn("🔁 SignalR reconnecting...", error);
+        try {
+          if (reconnectToastId == null) {
+            // show a long-lived info toast until reconnect/close
+            reconnectToastId = toast.info("Reconnecting to server...", 60000);
+          }
+        } catch (e) {
+          // swallow if toast cannot be shown for any reason
+          console.warn("toast unavailable:", e);
+        }
+      });
+
+      connection.onreconnected((connectionId) => {
+        console.log("✅ SignalR reconnected", connectionId);
+        try {
+          if (reconnectToastId != null) {
+            toast.dismiss(reconnectToastId);
+            reconnectToastId = null;
+          }
+          toast.success("Reconnected to server");
+        } catch (e) {
+          console.warn("toast unavailable:", e);
+        }
+      });
+
+      connection.onclose((error) => {
+        console.warn("❌ SignalR connection closed", error);
+        try {
+          if (reconnectToastId != null) {
+            toast.dismiss(reconnectToastId);
+            reconnectToastId = null;
+          }
+          const msg = error?.message
+            ? `Connection closed: ${error.message}`
+            : "Connection to server was closed. Check your network.";
+          toast.error(msg, 8000);
+        } catch (e) {
+          console.warn("toast unavailable:", e);
+        }
+      });
+    } else {
+      console.debug(
+        "connectSignalR: reusing existing connection object, state=",
+        connection.state
+      );
+    }
+
+    try {
+      console.debug("connectSignalR: starting connection...");
+      await connection.start();
+      console.log("✅ SignalR connected");
+      return connection as signalR.HubConnection;
+    } catch (err) {
+      console.error("❌ SignalR connection failed:", err);
+      try {
+        // show user-visible error when initial connection fails
+        const msg = (err as Error)?.message
+          ? `Unable to connect to server: ${(err as Error).message}`
+          : "Unable to connect to server. Check your network.";
+        toast.error(msg, 8000);
+      } catch (e) {
+        console.warn("toast unavailable:", e);
+      }
+      // keep connection as null so future calls can retry
+      connection = null;
+      throw err;
+    } finally {
+      // allow subsequent attempts to create a new startingPromise
+      startingPromise = null;
+    }
+  })();
+
+  return startingPromise;
 };
 
 // ✅ Helpers

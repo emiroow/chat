@@ -124,6 +124,20 @@ export const Sidebar: React.FC = () => {
       });
   };
 
+  // compute filtered conversations once so we can show proper "no results" UI
+  const filteredConversations = conversations.filter((c: any) => {
+    if (!query) return true;
+    const q = query.toLowerCase();
+    return (
+      String(c.peer || "")
+        .toLowerCase()
+        .includes(q) ||
+      String(c.lastText || "")
+        .toLowerCase()
+        .includes(q)
+    );
+  });
+
   return (
     <div className="flex h-full w-full md:w-80 flex-col md:border-r border-(--border) bg-(--sidebar)">
       <div className="w-full p-3 flex justify-between items-center gap-3">
@@ -142,7 +156,7 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-3 pb-3">
+      <div className="px-3">
         <div className="relative">
           <span className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-neutral-400">
             <IconSearch className="size-4" />
@@ -181,21 +195,18 @@ export const Sidebar: React.FC = () => {
       </div>
 
       <ScrollArea variant="hidden" className="flex-1">
-        <ul className="px-2 flex flex-col gap-1 py-2">
-          {conversations
-            .filter((c: any) => {
-              if (!query) return true;
-              const q = query.toLowerCase();
-              return (
-                String(c.peer || "")
-                  .toLowerCase()
-                  .includes(q) ||
-                String(c.lastText || "")
-                  .toLowerCase()
-                  .includes(q)
-              );
-            })
-            .map((c: any, idx: number) => {
+        {conversations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center opacity-50">
+            <p className="text-sm">No conversations yet</p>
+            <p className="text-xs mt-1">Start chatting with someone!</p>
+          </div>
+        ) : filteredConversations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center opacity-50">
+            <p className="text-sm">No conversations found</p>
+          </div>
+        ) : (
+          <ul className="px-2 flex flex-col gap-1 py-2">
+            {filteredConversations.map((c: any, idx: number) => {
               const id = (c as any).id || c.peer;
               return (
                 <NavLink to={`/${id}`} key={id || idx}>
@@ -241,8 +252,10 @@ export const Sidebar: React.FC = () => {
                 </NavLink>
               );
             })}
-        </ul>
+          </ul>
+        )}
       </ScrollArea>
+
       <div className="border-t border-(--border) p-3">
         <div className="flex items-center gap-3">
           <Avatar size="sm" fallback={userName[0]?.toUpperCase() || "ME"} />
@@ -278,6 +291,7 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
       </div>
+
       {/* Create chat modal */}
       <AnimatePresence>
         {openCreate && (

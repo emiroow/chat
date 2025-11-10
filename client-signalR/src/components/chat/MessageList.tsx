@@ -72,7 +72,7 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   return (
     <ScrollArea className="flex-1 px-4 py-4">
-      <div className="mx-auto max-w-3xl space-y-3">
+      <div className="mx-auto max-w-4xl flex flex-col justify-end min-h-[calc(100vh-150px)]">
         {Array.from(messageGroups.entries()).map(([dateKey, msgs]) => (
           <div key={dateKey} className="space-y-3">
             {/* Date divider */}
@@ -88,7 +88,6 @@ export const MessageList: React.FC<MessageListProps> = ({
             {msgs.map((msg, i) => {
               const isMe = msg.from === currentUserId;
               const isFirstFromPeer = i === 0 || msgs[i - 1].from !== msg.from;
-
               return (
                 <motion.div
                   key={msg.id.timestamp}

@@ -49,6 +49,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             {name}
           </div>
         ) : null}
+
         <div
           dir="auto"
           className={cn(
@@ -65,7 +66,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         </div>
       </div>
 
-      {isMe ? <div className="w-8" /> : null}
+      {/* {isMe ? <div className="w-8" /> : null} */}
     </div>
   );
 };

@@ -31,10 +31,40 @@ export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const init = async () => {
       try {
-        const conn = await connectSignalR();
+        const connection = await connectSignalR();
         if (!mount) return;
-        setSignalRConnection(conn);
+        setSignalRConnection(connection);
         setConnected(true);
+
+        // Keep `connected` state in sync with connection lifecycle.
+        // When the connection reconnects / reconnecting / closes we reflect that
+        // in the context so consumers can react (e.g. disabling UI while reconnecting).
+        const handleReconnecting = () => {
+          if (!mount) return;
+          setConnected(false);
+        };
+
+        const handleReconnected = () => {
+          if (!mount) return;
+          setConnected(true);
+        };
+
+        const handleClose = () => {
+          if (!mount) return;
+          setConnected(false);
+        };
+
+        try {
+          connection.onreconnecting(handleReconnecting);
+          connection.onreconnected(handleReconnected);
+          connection.onclose(handleClose);
+        } catch (e) {
+          // Older/alternate SignalR builds won't throw here, but guard anyway.
+          console.warn(
+            "Could not attach lifecycle handlers to SignalR connection",
+            e
+          );
+        }
 
         // Auto-register if user info is in localStorage
         const userId = localStorage.getItem("userId");
@@ -43,7 +73,7 @@ export const SignalRProvider: React.FC<{ children: React.ReactNode }> = ({
           // Backend expects Register(username, name)
           // We use userId as the stable username and userName as display name
           await hubApi.Register(userId, userName).then((res) => {
-            console.log("✅ Auto registered:", res);
+            console.log("✅ Auto registered:", res.user.name);
           });
         }
       } catch (err) {
