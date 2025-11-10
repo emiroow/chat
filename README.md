@@ -102,30 +102,17 @@ server-socket/      # Node.js + Socket.IO backend
 
 ---
 
-- client-socket:
-
-  - `VITE_SERVER_URL` (default: http://localhost:3000)
-
-- client-signalR:
-
-  - `VITE_SIGNALR_URL` (required)
-
-- server-socket:
-  - `PORT` (default: 3000)
-
-## Tech stack / تکنولوژی‌ها
+## Tech Stack
 
 - React 19, TypeScript, Vite, Tailwind CSS
 - TanStack Query, Zustand, React Router
 - Socket.IO (server + client) / Microsoft SignalR (client)
 - Node.js, Express
 
-## SEO keywords / کلمات کلیدی برای جستجو
+## SEO Keywords
 
-chat app, real-time chat, React chat, Socket.IO chat, SignalR chat, Node.js chat server, TypeScript, Vite, Persian, Farsi, چت آنلاین، برنامه چت، سوکت آی او، سیگنال آر، ری‌اکت، نود جی‌اس
+chat app, real-time chat, React chat, Socket.IO chat, SignalR chat, Node.js chat server, TypeScript, Vite, Persian, Farsi
 
-## License / مجوز
+## License
 
 This repository uses the ISC license (see `server-socket/package.json`).
-
-این مخزن تحت مجوز ISC منتشر شده است.
