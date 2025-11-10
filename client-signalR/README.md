@@ -1,61 +1,109 @@
-# Chat Client (SignalR) — React + TypeScript + Vite
+# Chat Client (SignalR)
 
-کلاینت چت (SignalR) — ریاکت + تایپ‌اسکریپت + وایت
+[![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.x-purple?logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-4.x-blue?logo=tailwindcss)](https://tailwindcss.com/)
+[![SignalR](https://img.shields.io/badge/SignalR-9.x-blue?logo=microsoft)](https://learn.microsoft.com/aspnet/core/signalr/introduction)
 
-This is the SignalR-powered React chat client. It connects to a SignalR hub and renders a responsive chat UI built with Tailwind CSS, React Router, TanStack Query, and Zustand.
+---
 
-این پروژه نسخه کلاینت چت با SignalR است. کلاینت به هاب SignalR متصل می‌شود و یک رابط کاربری واکنش‌گرا با Tailwind/React Router/TanStack Query/Zustand ارائه می‌دهد.
+> **English · [فارسی](../README.fa.md)**
 
-## Features / قابلیت‌ها
+---
+
+## Overview
+
+A modern, real-time chat client built with React 19, TypeScript, Vite, and Microsoft SignalR. This project demonstrates a responsive chat UI, real-time messaging, and state management using Zustand and TanStack Query.
+
+---
+
+## Features
 
 - Real-time messaging via Microsoft SignalR
-- Responsive ChatLayout with sidebar, message list, and profile panel
-- React 19 + Vite + Tailwind CSS 4
-- State and data: Zustand + TanStack Query
+- Responsive chat layout (sidebar, message list, profile panel)
+- Modern UI with Tailwind CSS 4
+- State management with Zustand and TanStack Query
+- Type-safe codebase with TypeScript
 
-- پیام‌رسانی لحظه‌ای با SignalR
-- چینش واکنش‌گرا برای چت (سایدبار، لیست پیام‌ها، پروفایل)
-- استفاده از React 19، Vite و Tailwind CSS
-- مدیریت State/Data با Zustand و TanStack Query
+---
 
-## Configuration / تنظیمات
+## Tech Stack
 
-- `VITE_SIGNALR_URL` — SignalR hub URL (required)
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, Zustand, TanStack Query, React Router
+- **Realtime:** Microsoft SignalR
+- **Linting:** ESLint, Prettier
 
-نمونه فایل `.env.example` را به `.env` کپی کرده و مقدار `VITE_SIGNALR_URL` را تنظیم کنید.
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm (or pnpm/yarn)
+
+### 1. Clone & Install
 
 ```bash
+cd client-signalR
 cp .env.example .env
-# VITE_SIGNALR_URL=https://your-host/hubs/realtime
+# Set VITE_SIGNALR_URL in .env
+npm install
 ```
 
-Connection config lives in `src/config/signalR.config.ts`.
-
-## Run locally / اجرای محلی
+### 2. Run Development Server
 
 ```bash
-npm install
 npm run dev
 ```
 
-Then open the printed URL from Vite (e.g., http://localhost:5173).
+Open the printed URL (e.g., http://localhost:5173).
 
-## Scripts / اسکریپت‌ها
+---
 
-- `npm run dev` — start Vite dev server
-- `npm run build` — type-check and build for production
-- `npm run preview` — preview production build
-- `npm run lint` — run ESLint
+## Configuration
 
-## Routes / مسیرها
+- `VITE_SIGNALR_URL` — SignalR hub URL (required)
+- Edit `src/config/signalR.config.ts` for advanced config
 
-- Unified chat route: `/chat/:id`
-- تغییر رفتار کلی چت در `src/components/layouts/ChatLayout.tsx` انجام می‌شود.
+---
 
-## Tech / تکنولوژی‌ها
+## Scripts
 
-React 19, TypeScript, Vite 7, Tailwind CSS 4, TanStack Query 5, Zustand, @microsoft/signalr
+- `npm run dev` — Start Vite dev server
+- `npm run build` — Type-check and build for production
+- `npm run preview` — Preview production build
+- `npm run lint` — Run ESLint
 
-## SEO keywords / کلمات کلیدی
+---
+
+## Project Structure
+
+- `src/components/` — UI components (chat, layouts, ui)
+- `src/config/` — SignalR config
+- `src/context/` — SignalR context provider
+- `src/pages/` — Page components
+- `src/routes/` — App routes
+- `src/types/` — TypeScript types
+
+---
+
+## License
+
+ISC © 2025 — See [../server-socket/package.json](../server-socket/package.json)
+
+---
+
+## Acknowledgements
+
+- [shadcn/ui](https://ui.shadcn.com/) for UI primitives
+- [Microsoft SignalR](https://learn.microsoft.com/aspnet/core/signalr/introduction)
+
+---
+
+## SEO Keywords
+
+signalr chat, react chat, realtime chat, typescript, vite, persian, farsi, سیگنال آر، چت آنلاین، ری‌اکت
 
 signalr chat, react signalr, realtime chat react, typescript, vite, persian, farsi, سیگنال آر، چت ریل‌تایم، ری‌اکت، تایپ‌اسکریپت
