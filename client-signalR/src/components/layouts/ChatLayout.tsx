@@ -27,6 +27,7 @@ export const ChatLayout: React.FC = () => {
   const getMessages = async (id: string) => {
     if (!userId && !id) return;
     hubApi.GetMessages(userId, id).then((res) => {
+      console.log(res);
       setMessages(res.messages);
       setUser(res.user);
     });
