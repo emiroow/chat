@@ -48,8 +48,41 @@ export const connectSignalR = async (): Promise<signalR.HubConnection> => {
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
+      // Register default handlers for common server invocations
+
+      try {
+        connection.on("connected", (...args: any[]) => {
+          // lightweight log for debugging; don't throw or change app state here
+          console.debug("SignalR: server invoked 'connected'", ...args);
+        });
+      } catch (e) {
+        // Silently ignore if `.on` isn't available for some reason
+        console.warn("Could not register 'connected' handler:", e);
+      }
+
+      try {
+        connection.on("message", (...args: any[]) => {
+          // lightweight log for debugging; don't throw or change app state here
+          console.debug("SignalR: server invoked 'message'", ...args);
+        });
+      } catch (e) {
+        // Silently ignore if `.on` isn't available for some reason
+        console.warn("Could not register 'message' handler:", e);
+      }
+
+      try {
+        connection.on("users", (...args: any[]) => {
+          // The server may send an array or object describing users; log for now.
+          console.debug("SignalR: server invoked 'users'", ...args);
+        });
+      } catch (e) {
+        console.warn("Could not register 'users' handler:", e);
+      }
+
+      // --------------------------------------------------------------------------------------
       // Manage a single persistent reconnect toast so the UI doesn't spam notifications
       let reconnectToastId: number | null = null;
+      // Handle reconnecting event
       connection.onreconnecting((error) => {
         console.warn("🔁 SignalR reconnecting...", error);
         try {
@@ -63,6 +96,7 @@ export const connectSignalR = async (): Promise<signalR.HubConnection> => {
         }
       });
 
+      // Handle successful reconnection
       connection.onreconnected((connectionId) => {
         console.log("✅ SignalR reconnected", connectionId);
         try {
@@ -76,6 +110,7 @@ export const connectSignalR = async (): Promise<signalR.HubConnection> => {
         }
       });
 
+      // Handle closed connection
       connection.onclose((error) => {
         console.warn("❌ SignalR connection closed", error);
         try {

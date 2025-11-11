@@ -34,6 +34,7 @@ export const Sidebar: React.FC = () => {
     if (!connected || !userId) return;
     try {
       const res = await hubApi.GetConversations(userId);
+      console.log("✅ Fetched conversations:", res);
       // ensure dates are parsed if server returns ISO strings
       const parsed: conversation[] = (res || []).map((c: any) => ({
         peer: c.peer ?? c.name ?? c.id ?? "",
